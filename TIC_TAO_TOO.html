@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tic tao tou game</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background-color: #023047;
+            text-align: center;
+            align-items: center;
+            color: aqua;
+        }
+        .main{
+            height: 70vh;
+            background-color: #ffb703;
+            color: white;
+            display:flex; /*MAKING SQUARE ROW AND */ 
+            /*MAKING SQUARE ROW AND COLUMN FORM IF CONTENT IS OVER SIZED*/
+            justify-content: center; /* HORIZONTAL centralized */
+            align-items: center;
+        }
+        .game_board{
+            height: 60vmin;
+            width: 60vmin;
+            /* margin: auto; */
+            margin-top: 20px;
+            background-color: #ffb703;
+            display:flex; /*MAKING SQUARE ROW AND */
+            flex-wrap: wrap; 
+            /*MAKING SQUARE ROW AND COLUMN FORM IF CONTENT IS OVER SIZED*/
+            justify-content: center; /* HORIZONTAL centralized */
+            align-items: center;
+            gap: 1.5vmin;;
+            /* VERTICAL CENTERALIZED */
+        }
+        .game_btn{
+            height: 18vmin;
+            width:18vmin;
+            border-radius: 1rem;
+            /* margin: 5px; */
+            background-color:rgb(11, 87, 124) ;
+            color: rgb(196, 187, 217);
+            border: none;
+            box-shadow: 0 0 2rem rgba(rgb(248, 63, 63), green, blue, alpha);
+            font-size: 13vmin;
+
+        }
+
+        #reset_btn{
+            height: 9vmin;
+            border-radius: 0.7rem;
+            margin-top: 5vmin;
+            font-size: 6vmin;
+            background-color: #ffb703;
+            padding: 1vmin 1vmin 1vmin 1vmin;
+        }
+        #new_game_btn{
+            height: 9vmin;
+            border-radius: 0.7rem;
+            margin-top: 5vmin;
+            font-size: 6vmin;
+            background-color: rgb(138, 198, 28);
+            padding: 1vmin 1vmin 1vmin 1vmin;
+        }
+        #msg{
+            color: #ffb703;
+            font-size: 8vmin;
+        }
+        .hide{
+            display:none;
+        }
+
+        .message-Container{
+            margin-top: 20vmin;
+            height: 80vmin;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div class="message-Container hide">
+        <p id="msg">WINNER</p>
+        <button id="new_game_btn">New Game</button>
+    </div>
+    <H1>TIC TAC TOE</H1>
+    <div class="main">
+        <div class="game_board">
+            <button class="game_btn"></button>
+            <button class="game_btn"></button>
+            <button class="game_btn"></button>
+            <button class="game_btn"></button>
+            <button class="game_btn"></button>
+            <button class="game_btn"></button>
+            <button class="game_btn"></button>
+            <button class="game_btn"></button>
+            <button class="game_btn"></button>
+        </div>
+    </div>
+    <button id="reset_btn">RESET</button>
+</body>
+<script>
+let g_btn = document.querySelectorAll(".game_btn");
+let reset_btn = document.querySelector("#reset_btn");
+let new_game_btn = document.querySelector("#new_game_btn");
+let win_message = document.querySelector(".message-Container")
+let msg = document.querySelector("p")
+
+let turn_o = true;
+let win_patter = [
+    [0,1,2],
+    [0,4,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [2,4,6],
+    [3,4,5],
+    [6,7,8],
+    ]
+
+    let press_count = 0;
+    g_btn.forEach((box) =>{
+        //we are using loop to apply listener to all game button
+        box.addEventListener("click",()=>{
+            // console.log("button click");
+            //to select the turn of user 0 & user x
+            if(turn_o){
+                box.style.color="#21CBBF";
+                box.textContent ="0";
+                turn_o = false;
+            }
+            else{
+                box.textContent = "X";
+                box.style.color = "yellow";
+                turn_o = true;
+            }
+            press_count++;
+            //to disable game button after use;
+            box.disabled = true;
+            //to check to pattern
+            check_winner();
+
+            if(press_count===9){
+                show_draw_msg();
+            }
+
+        });
+    });
+
+let show_winner_msg =(p0)=>{
+    msg.innerText=`Congatulations ! ${p0} , You Are Winner`;
+    disable_boxes();
+    win_message.classList.remove("hide");
+    press_count=0;
+}
+
+let show_draw_msg =(p0)=>{
+    msg.innerText=`Opps ! This Match is Draw.....`;
+    disable_boxes();
+    win_message.classList.remove("hide");
+    press_count=0;
+}
+    let check_winner = ()=>{
+        for(let pattern of win_patter){
+                // console.log(pattern[0],pattern[1],pattern[2]);
+                // console.log(g_btn[pattern[0]],g_btn[pattern[1]],g_btn[pattern[2]]);
+                let p0 = g_btn[pattern[0]].innerText;
+                let p1 = g_btn[pattern[1]].innerText;
+                let p2 = g_btn[pattern[2]].innerText;
+                if(p0!="" && p1!="" && p2!=""){
+                    if(p0===p1 && p1===p2){
+                        // console.log(`${p0} is winner`);
+                        show_winner_msg(p0);
+                    }
+                }
+                // console.log(p0.innerText,p1.innerText,p2.innerText);
+            }
+    }
+
+    let reset_game = ()=>{
+        turn_o = true;
+        win_message.classList.add("hide");
+       enable_boxes();
+    }
+
+    const disable_boxes = ()=>{
+        for(let box of g_btn){
+            box.disabled = true;
+        }
+    }
+    const enable_boxes = ()=>{
+        for(btn of g_btn){
+            btn.disabled = false;
+            btn.innerText="";
+        }
+    }
+
+
+    new_game_btn.addEventListener("click",reset_game);
+    reset_btn.addEventListener("click",reset_game);
+
+
+
+</script>
+</html>
